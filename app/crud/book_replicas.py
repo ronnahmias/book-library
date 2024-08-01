@@ -1,10 +1,16 @@
 from sqlalchemy.orm import Session
+from app.models.book_replicas import BookReplica
 from app.schemas.book import Book
-from app.schemas.book_replica import BookReplica
 
-def create_book_replica(book:Book, db: Session):
-    db_book_rep = BookReplica(book_id=book.id)
+def create_book_replica(db: Session, book:Book):
+    db_book_rep = BookReplica(book_id=book.id, is_available=True)
     db.add(db_book_rep)
     db.commit()
     db.refresh(db_book_rep)
     return db_book_rep
+
+def delete_book_replica(db: Session, book_replica: BookReplica):
+    db.delete(book_replica)
+    db.commit()
+    return True
+    
