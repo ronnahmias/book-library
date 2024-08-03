@@ -4,7 +4,7 @@ from app.db.session import engine
 from app.routes.base import api_router
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(title="Book Library API", version="1.0")
 
 app.include_router(api_router, prefix="/api/v1")
 

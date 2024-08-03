@@ -17,7 +17,6 @@ class BookService:
             replica = crud_book_replicas.create_book_replica(db, bookEnt)
             replicas.append(replica)
         bookEnt.replicas = replicas
-        print(bookEnt.replicas[0].id)
         return bookEnt
     
     @staticmethod
