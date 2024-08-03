@@ -10,3 +10,5 @@ class Client(Base):
     last_name = Column(String, index=True)
     email = Column(String, index=True, unique=True)
     phone = Column(String, index=True)
+
+    loans = relationship("Loan", back_populates="clients")

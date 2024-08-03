@@ -11,3 +11,4 @@ class BookReplica(Base):
     book_id = Column(Integer, ForeignKey("books.id"))
 
     book = relationship("Book", back_populates="replicas")
+    loans = relationship("Loan", back_populates="replicas")
