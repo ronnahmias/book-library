@@ -8,7 +8,7 @@ class BookReplica(Base):
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
     is_available = Column(Boolean, default=True)
-    book_id = Column(Integer, ForeignKey("books.id"))
+    book_id = Column(Integer, ForeignKey("books.id"), nullable=False)
 
     book = relationship("Book", back_populates="replicas")
     loans = relationship("Loan", back_populates="replicas")

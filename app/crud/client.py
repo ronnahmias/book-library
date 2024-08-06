@@ -1,69 +1,42 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
-
+from app.models.book_replicas import BookReplica
 from app.models.client import Client
+from app.models.loan import Loan
 from app.schemas.client import ClientCreate, ClientUpdate
 
 def get_clients(db: Session, skip: int = 0, limit: int = 10):
-    try:
-        return db.query(Client).offset(skip).limit(limit).all()
-    except:
-        raise HTTPException(status_code=500)
+    return db.query(Client).offset(skip).limit(limit).all()
     
-
-# TODO: change dynamic filter to use a search query
 def get_client(db: Session, client_id: int):
-    try:
-        return db.query(Client).filter(Client.id == client_id).first()
-    except:
-        raise HTTPException(status_code=500)
+    return db.query(Client).filter(Client.id == client_id).first()
 
-# TODO: change dynamic filter to use a search query
 def get_client_by_email(db: Session, email: str):
-    try:
-        return db.query(Client).filter(Client.email == email).first()
-    except:
-        raise HTTPException(status_code=500)
+    return db.query(Client).filter(Client.email == email).first()
 
 def create_client(db: Session, client: ClientCreate):
     db_client = Client(**client.model_dump())
-    try:
-        db.add(db_client)
-        db.commit()
-        db.refresh(db_client)
-    except:
-        db.rollback()
-        raise HTTPException(status_code=500)
+    db.add(db_client)
+    db.commit()
+    db.refresh(db_client)
     return db_client
 
-def update_client(db: Session, client_id: int, client: ClientUpdate):
-    db_client = get_client(db, client_id)
-    if db_client:
-        if client.email:
-            existing_client = get_client_by_email(db, client.email)
-            if existing_client and existing_client.id != client_id:
-                raise HTTPException(status_code=400, detail="Email already exists")
+def update_client(db: Session, db_client: Client, client: ClientUpdate):
+    # Update only the fields that were set
+    for key, value in client.model_dump(exclude_unset=True).items():
+        setattr(db_client, key, value)
+    
+        db.commit()
+        db.refresh(db_client)
+        return db_client
+       
 
-        # Update only the fields that were set
-        for key, value in client.model_dump(exclude_unset=True).items():
-            setattr(db_client, key, value)
-        try:
-            db.commit()
-            db.refresh(db_client)
-            return db_client
-        except:
-            db.rollback()
-            raise HTTPException(status_code=500)
-    return None
+def delete_client(db: Session, db_client: Client):
+    db.delete(db_client)
+    db.commit()
 
-def delete_client(db: Session, client_id: int):
-    db_client = get_client(db, client_id)
-    if db_client:
-        try:
-            db.delete(db_client)
-            db.commit()
-            return 
-        except:
-            db.rollback()
-            raise HTTPException(status_code=500)
-    raise HTTPException(status_code=404, detail="Client not found")
+def get_book_clients_holders(db: Session, book_id: int):
+    return db.query(Client).join(Loan, Client.id == Loan.client_id).join(BookReplica, Loan.book_replica_id == BookReplica.id).filter(BookReplica.book_id == book_id,
+                                                                                                                                BookReplica.is_available == False).all()
+    
+def get_book_replica_holder(db: Session, replica_id: int):
+    return db.query(Client).join(Loan, Client.id == Loan.client_id).join(BookReplica, Loan.book_replica_id == BookReplica.id).filter(BookReplica.id == replica_id).first()

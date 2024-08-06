@@ -13,4 +13,11 @@ def delete_book_replica(db: Session, book_replica: BookReplica):
     db.delete(book_replica)
     db.commit()
     return True
+
+def update_book_replica_availability(db: Session, book_replica: BookReplica, is_available: bool):
+    book_replica.is_available = is_available
+    return book_replica
+
+def get_book_replica_by_id(db: Session, book_replica_id: str):
+    return db.query(BookReplica).filter(BookReplica.id == book_replica_id).first()
     

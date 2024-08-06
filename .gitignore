@@ -83,3 +83,5 @@ package-lock.json
 *.sublime-workspace
 *.tmproj
 *.tm_properties
+
+*.db

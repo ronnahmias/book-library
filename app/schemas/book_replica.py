@@ -1,4 +1,3 @@
-import datetime
 from pydantic import BaseModel, Field
 
 class BookReplicaBase(BaseModel):

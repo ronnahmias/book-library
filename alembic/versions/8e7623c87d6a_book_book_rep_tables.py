@@ -31,8 +31,8 @@ def upgrade() -> None:
     op.create_index(op.f('ix_books_title'), 'books', ['title'], unique=False)
     op.create_table('books_replicas',
     sa.Column('id', sa.String(), nullable=False),
-    sa.Column('is_available', sa.Boolean(), nullable=True),
-    sa.Column('book_id', sa.Integer(), nullable=True),
+    sa.Column('is_available', sa.Boolean(), nullable=False),
+    sa.Column('book_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['book_id'], ['books.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
