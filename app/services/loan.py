@@ -1,6 +1,8 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+from app.models.book import Book
+from app.models.loan import Loan
 from app.schemas.loan import LoanCreate, LoanReturn
 from app.crud import book as crud_book
 from app.crud import client as crud_client
@@ -11,7 +13,7 @@ import pytz
 class LoanService:
 
     @staticmethod
-    def loan_book(db: Session, loan: LoanCreate):
+    def loan_book(db: Session, loan: LoanCreate)-> Loan:
         try:
             # ensure that all operations are done in a single transaction for validation of the loan
             with db.begin():
@@ -36,7 +38,7 @@ class LoanService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred while processing the request")
     
     @staticmethod    
-    def return_book(db: Session, loan_dto:LoanReturn, loan_id: int):
+    def return_book(db: Session, loan_dto:LoanReturn, loan_id: int)-> Loan:
         try:
             with db.begin():
                 # find loan by id
@@ -70,7 +72,7 @@ class LoanService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred while processing the request")
     
     @staticmethod    
-    def get_overdue_loans(db: Session, days: int):
+    def get_overdue_loans(db: Session, days: int)-> list[Book]:
         try:
             return crud_book.get_overdue_book_loans(db, days)
         except SQLAlchemyError as e:
