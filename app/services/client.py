@@ -5,12 +5,14 @@ from app.schemas.client import ClientCreate, ClientUpdate
 
 class ClientService:
 
+    @staticmethod
     def get_clients(db: Session, skip: int = 0, limit: int = 10):
         try:
             return crud_client.get_clients(db, skip=skip, limit=limit)
         except:
             raise HTTPException(status_code=500, detail="There was an error while trying to get clients")
     
+    @staticmethod
     def create_client(db: Session, client: ClientCreate):
         try:
             # Check if client already exists by email
@@ -21,12 +23,14 @@ class ClientService:
             db.rollback()
             raise HTTPException(status_code=500, detail="There was an error while trying to create client")
     
+    @staticmethod
     def get_client(db: Session, client_id: int):
         try:
             return crud_client.get_client(db, client_id)
         except:
             raise HTTPException(status_code=500, detail="There was an error while trying to get client")
     
+    @staticmethod
     def update_client(db: Session, client_id: int, client: ClientUpdate):
         db_client = crud_client.get_client(db, client_id)
         if db_client:
@@ -40,6 +44,7 @@ class ClientService:
                 db.rollback()
                 raise HTTPException(status_code=500, detail="There was an error while trying to update client")
     
+    @staticmethod
     def delete_client(db: Session, client_id: int):
         db_client = crud_client.get_client(db, client_id)
         if not db_client:

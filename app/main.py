@@ -21,4 +21,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# TODO: Add Api key middleware

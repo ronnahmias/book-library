@@ -7,6 +7,7 @@
 - In loan route there is option to add past loan with start and end loan dates.
 - The client unique identifier is Email (It can be change according to other requirements).
 - When adding new book to the app number of replicas being created in order to track and assign each copy to a different serial.
+- Basic Api Key - Insert Key inside the .env file and then in the swagger type it on authorize.
 
 ## Pre Installations
 
@@ -14,18 +15,21 @@
 
 ## Installation
 
-- extract or clone this repository
-- open terminal
-- create new virtual env with the command `python -m venv venv`
-- run the virtual env- windows `.\venv\Scripts\activate` or in mac `source venv/bin/activate`
-- make sure you run the next commands inside the venv
-- install the libraries `pip install -r requirements.txt`
-- run migrations before run the app `alembic upgrade head`
+- Extract or clone this repository
+- Open terminal
+- Create new virtual env with the command `python -m venv venv`
+- Run the virtual env- windows `.\venv\Scripts\activate` or in mac `source venv/bin/activate`
+- Make sure you run the next commands inside the venv
+- Install the libraries `pip install -r requirements.txt`
+- Run migrations before run the app `alembic upgrade head`
+- Create .env file in the root of the project. Here is example:
+  - SQLALCHEMY_DATABASE_URL="sqlite:///./book_library.db"
+  - API_KEY="your_api_key"
 
 ## Run the App
 
 - `uvicorn app.main:app`
-- open browser in the url - http://127.0.0.1:8000/docs for documentation of the api and use also the api through this url
+- Open browser in the url - http://127.0.0.1:8000/docs for documentation of the api and use also the api through this url
 
 ## Design
 
